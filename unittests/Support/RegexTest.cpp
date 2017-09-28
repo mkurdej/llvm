@@ -61,6 +61,33 @@ TEST_F(RegexTest, Basics) {
   EXPECT_TRUE(r5.match(String));
 }
 
+TEST_F(RegexTest, Tabulators) {
+  Regex r1("^\\t+$");
+  EXPECT_TRUE(r1.match("\t"));
+  EXPECT_TRUE(r1.match("\t\t\t"));
+  EXPECT_FALSE(r1.match(""));
+  EXPECT_FALSE(r1.match(" "));
+  EXPECT_FALSE(r1.match(" \t "));
+
+  Regex r2("^(\\t| )+$");
+  EXPECT_TRUE(r2.match("\t"));
+  EXPECT_TRUE(r2.match("\t\t\t"));
+  EXPECT_FALSE(r2.match(""));
+  EXPECT_TRUE(r2.match(" "));
+  EXPECT_TRUE(r2.match(" \t "));
+
+  // FIXME: If we want to handle tabulators inside brackets, we should modify
+  // p_b_term in regcomp.c.
+  /*
+  Regex r3("^[\\t ]+$");
+  EXPECT_TRUE(r3.match("\t"));
+  EXPECT_TRUE(r3.match("\t\t\t"));
+  EXPECT_FALSE(r3.match(""));
+  EXPECT_TRUE(r3.match(" "));
+  EXPECT_TRUE(r3.match(" \t "));
+  */
+}
+
 TEST_F(RegexTest, Backreferences) {
   Regex r1("([a-z]+)_\\1");
   SmallVector<StringRef, 4> Matches;
@@ -100,7 +127,7 @@ TEST_F(RegexTest, Substitution) {
 
   EXPECT_EQ("aber", Regex("[0-9]+").sub("\\", "a1234ber", &Error));
   EXPECT_EQ(Error, "replacement string contained trailing backslash");
-  
+
   // Backreferences
   EXPECT_EQ("aa1234bber", Regex("a[0-9]+b").sub("a\\0b", "a1234ber", &Error));
   EXPECT_EQ("", Error);

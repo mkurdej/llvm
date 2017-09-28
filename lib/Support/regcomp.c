@@ -402,6 +402,8 @@ p_ere_exp(struct parse *p)
 			(void) dupl(p, p->pbegin[backrefnum]+1, p->pend[backrefnum]);
 			EMIT(O_BACK, backrefnum);
 			p->g->backrefs = 1;
+        } else if (c == 't') {
+            ordinary(p, '\t');
 		} else {
 			/* Other chars are simply themselves when escaped with a backslash.
 			 */
