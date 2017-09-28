@@ -76,16 +76,12 @@ TEST_F(RegexTest, Tabulators) {
   EXPECT_TRUE(r2.match(" "));
   EXPECT_TRUE(r2.match(" \t "));
 
-  // FIXME: If we want to handle tabulators inside brackets, we should modify
-  // p_b_term in regcomp.c.
-  /*
   Regex r3("^[\\t ]+$");
   EXPECT_TRUE(r3.match("\t"));
   EXPECT_TRUE(r3.match("\t\t\t"));
   EXPECT_FALSE(r3.match(""));
   EXPECT_TRUE(r3.match(" "));
   EXPECT_TRUE(r3.match(" \t "));
-  */
 }
 
 TEST_F(RegexTest, Backreferences) {
