@@ -84,6 +84,75 @@ TEST_F(RegexTest, Tabulators) {
   EXPECT_TRUE(r3.match(" \t "));
 }
 
+TEST_F(RegexTest, EscapedNewline) {
+  Regex r1("^\\n+$");
+  EXPECT_TRUE(r1.match("\n"));
+  EXPECT_TRUE(r1.match("\n\n\n"));
+  EXPECT_FALSE(r1.match(""));
+  EXPECT_FALSE(r1.match(" "));
+  EXPECT_FALSE(r1.match(" \n "));
+
+  Regex r2("^(\\n| )+$");
+  EXPECT_TRUE(r2.match("\n"));
+  EXPECT_TRUE(r2.match("\n\n\n"));
+  EXPECT_FALSE(r2.match(""));
+  EXPECT_TRUE(r2.match(" "));
+  EXPECT_TRUE(r2.match(" \n "));
+
+  Regex r3("^[\\n ]+$");
+  EXPECT_TRUE(r3.match("\n"));
+  EXPECT_TRUE(r3.match("\n\n\n"));
+  EXPECT_FALSE(r3.match(""));
+  EXPECT_TRUE(r3.match(" "));
+  EXPECT_TRUE(r3.match(" \n "));
+}
+
+TEST_F(RegexTest, EscapedSlash) {
+  Regex r1("^\\\\+$");
+  EXPECT_TRUE(r1.match("\\"));
+  EXPECT_TRUE(r1.match("\\\\\\"));
+  EXPECT_FALSE(r1.match(""));
+  EXPECT_FALSE(r1.match(" "));
+  EXPECT_FALSE(r1.match(" \\ "));
+
+  Regex r2("^(\\\\| )+$");
+  EXPECT_TRUE(r2.match("\\"));
+  EXPECT_TRUE(r2.match("\\\\\\"));
+  EXPECT_FALSE(r2.match(""));
+  EXPECT_TRUE(r2.match(" "));
+  EXPECT_TRUE(r2.match(" \\ "));
+
+  Regex r3("^[\\\\ ]+$");
+  EXPECT_TRUE(r3.match("\\"));
+  EXPECT_TRUE(r3.match("\\\\\\"));
+  EXPECT_FALSE(r3.match(""));
+  EXPECT_TRUE(r3.match(" "));
+  EXPECT_TRUE(r3.match(" \\ "));
+}
+
+TEST_F(RegexTest, EscapedOrdinaryCharacters) {
+  Regex r1("^\\X+$");
+  EXPECT_TRUE(r1.match("X"));
+  EXPECT_TRUE(r1.match("XXX"));
+  EXPECT_FALSE(r1.match(""));
+  EXPECT_FALSE(r1.match(" "));
+  EXPECT_FALSE(r1.match(" X "));
+
+  Regex r2("^(\\X| )+$");
+  EXPECT_TRUE(r2.match("X"));
+  EXPECT_TRUE(r2.match("XXX"));
+  EXPECT_FALSE(r2.match(""));
+  EXPECT_TRUE(r2.match(" "));
+  EXPECT_TRUE(r2.match(" X "));
+
+  Regex r3("^[\\X ]+$");
+  EXPECT_TRUE(r3.match("X"));
+  EXPECT_TRUE(r3.match("XXX"));
+  EXPECT_FALSE(r3.match(""));
+  EXPECT_TRUE(r3.match(" "));
+  EXPECT_TRUE(r3.match(" X "));
+}
+
 TEST_F(RegexTest, Backreferences) {
   Regex r1("([a-z]+)_\\1");
   SmallVector<StringRef, 4> Matches;

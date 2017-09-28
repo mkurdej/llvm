@@ -404,6 +404,9 @@ p_ere_exp(struct parse *p)
 			p->g->backrefs = 1;
 		} else {
             switch (c) {
+            case 'n':
+              ordinary(p, '\n');
+              break;
             case 't':
               ordinary(p, '\t');
               break;
@@ -798,6 +801,9 @@ p_b_term(struct parse *p, cset *cs)
 			/* escape */
             char c;
             switch (c = GETNEXT()) {
+            case 'n':
+                start = finish = '\n';
+                break;
             case 't':
                 start = finish = '\t';
                 break;
