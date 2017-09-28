@@ -794,17 +794,18 @@ p_b_term(struct parse *p, cset *cs)
 	default:		/* symbol, ordinary character, or range */
 /* xxx revision needed for multichar stuff */
 		start = p_b_symbol(p);
-		if ((start == '\\') && MORE()) {
-			/* escape */
-            char c;
-            switch (c = GETNEXT()) {
-            case 't':
-                start = finish = '\t';
-                break;
-            default:
-                start = finish = c;
-                break;
-            }
+        if ((start == '\\')) {
+          /* escape */
+          REQUIRE(MORE(), REG_EESCAPE);
+          c = GETNEXT();
+          switch (c) {
+          case 't':
+            start = finish = '\t';
+            break;
+          default:
+            start = finish = c;
+            break;
+          }
 		} else if (SEE('-') && MORE2() && PEEK2() != ']') {
 			/* range */
 			NEXT();
